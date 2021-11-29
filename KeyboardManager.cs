@@ -22,7 +22,7 @@ public class KeyboardManager : MonoBehaviour
         // For the first word, will add a function to split on completion of a word/level
         //dictionary = m_gameManager.m_wordToType.Split(char.Parse(" "));
 
-        dictionary = m_gameManager.m_wordToType.ToCharArray();
+        dictionary = m_gameManager.m_wordToType.ToLower().ToCharArray(); //Evans - Always convert to lower case before converting to char
 
         for (int i = 0; i < dictionary.Length; i++)
         {
@@ -30,35 +30,16 @@ public class KeyboardManager : MonoBehaviour
         }
     }
 
+    public void KeyPressed(string _key)
+    {
+        ValidationCheck(_key);
+    }
+
     public void ValidationCheck(string letter)
     {
-        // Debug checking if this works. 
-        //Debug.Log("button pressed is " + letter);
-
-        // Validating letters pressed with letters in the dictionary, sends a right or wrong response, can be used in the game manager to clear the keyboard and/or etc
-
-        // Attempt 1
-        //switch (letter == dictionary[0]/* Not actual check condition */)
-        //{
-        //    case true:
-        //        Debug.Log("True");
-
-        //        // Code to Go to Next Line 
-        //        Debug.Log("Next Line");
-
-
-        //        break;
-        //    case false:
-        //        Debug.Log("False");
-        //        Debug.Log("Clear Board");
-        //        break;
-        //}
-
-        // Attempt 2
         // Clears only where letter is wrong
-
-        m_tempHold = letter.ToCharArray();
-        switch (m_tempHold[0] == dictionary[counter]/* Not actual check condition */)
+        m_tempHold = letter.ToLower().ToCharArray();//Evans - Convert To Lower then to Char
+        switch (m_tempHold[0].Equals(dictionary[counter]) /* Not actual check condition */)
         {
             case true:
                 Debug.Log("True");
@@ -72,13 +53,7 @@ public class KeyboardManager : MonoBehaviour
                 break;
             case false:
                 Debug.Log("False");
-                Debug.Log("Clear Tile");
                 break;
         }
-
-
-
     }
-
-
 }
