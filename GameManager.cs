@@ -13,6 +13,7 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         m_keyboardManager = FindObjectOfType<KeyboardManager>();
+        GetWordLength(m_wordToType);
     }
 
     // Update is called once per frame
@@ -37,13 +38,18 @@ public class GameManager : MonoBehaviour
         // Splits the Word into letters and places them within an array 
         //keyboard.dictionary = wordToSplt.Split(char.Parse(" "));
 
-        m_keyboardManager.dictionary = m_wordToType.ToCharArray();
-
-
+        m_keyboardManager.dictionary = m_wordToType.ToLower().ToCharArray();
 
         for (int i = 0; i < keyboard.dictionary.Length; i++)
         {
-            Debug.Log(keyboard.dictionary[i]);
+            //Debug.Log(keyboard.dictionary[i]);
         }
+    }
+
+    public int GetWordLength(string word)
+    {
+        int length = 0;
+        length = word.Length;
+        return length;
     }
 }
