@@ -13,33 +13,56 @@ public class EnemyController : MonoBehaviour
 
     public char[] m_variablesToGuess;
 
-    public char m_myGuess;
+    public char[] m_myGuess;
+
+    public string m_dictionaryWord;
+    public string m_guessedWord;
 
     //public TextMeshProUGUI[] inputFields;
+    //public GameManager gameManager;
 
     public int counter = 0;
 
+    public float m_guessDelay = 2f;
+    public float m_restartDelay = 2.5f;
+
+    public FailHandSequence FailHandSequence_;
+
+    public ExtendArm ExtendArm_;
+
+    public GrabSequence GrabSequence_GrabObject;
 
     // Start is called before the first frame update
     void Start()
     {
         dictionary = ControlCenter.Instance.GameManager_.m_wordToType.ToLower().ToCharArray();
         EnemyRangeRandomiser(m_difficultyLevel);
-        EnemyValidationCheck();
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
         
+        // Jeff - Debug comment
+        //EnemyValidationCheck();
+        m_myGuess = new char[dictionary.Length];
     }
 
-    public void RefreshDictionary(string word)                 // Function to update the enemy dictionary
+    // Used on level reset
+    [ContextMenu("Refresh Everything")]
+    public void RefreshEverything()                 // Function to update the enemy dictionary
     {
+        // Reset counter to 0;
+        counter = 0;
         // Clear Dictionary
         dictionary = null;
         // Set new characters to dictionary
         dictionary = ControlCenter.Instance.GameManager_.m_wordToType.ToLower().ToCharArray();
+        //dictionary = gameManager.m_wordToType.ToLower().ToCharArray();                        // Debug Stmt
+        // Refresh the variables to guess from as well
+        EnemyRangeRandomiser(m_difficultyLevel);
+        // Refresh Guess size as well
+        m_myGuess = new char[dictionary.Length];
+        // Clear both word fields
+        m_dictionaryWord = null;
+        m_guessedWord = null;
+        // Start guessing on Refresh
+        GuessLetter();
     }
 
     public void EnemyRangeRandomiser(int range)
@@ -53,7 +76,7 @@ public class EnemyController : MonoBehaviour
             case 2:
                 m_variablesToGuess = new char[m_difficultyLevel];
                 m_variablesToGuess[0] = dictionary[counter];
-                for (int i=1; i < 2; i++)
+                for (int i=1; i < m_difficultyLevel; i++)
                 {
                     m_variablesToGuess[i] = alphabet[Random.Range(0, alphabet.Length)];
                 }
@@ -61,7 +84,7 @@ public class EnemyController : MonoBehaviour
             case 3:
                 m_variablesToGuess = new char[m_difficultyLevel];
                 m_variablesToGuess[0] = dictionary[counter];
-                for (int i = 1; i < 3; i++)
+                for (int i = 1; i < m_difficultyLevel; i++)
                 {
                     m_variablesToGuess[i] = alphabet[Random.Range(0, alphabet.Length)];
                 }
@@ -69,7 +92,7 @@ public class EnemyController : MonoBehaviour
             case 4:
                 m_variablesToGuess = new char[m_difficultyLevel];
                 m_variablesToGuess[0] = dictionary[counter];
-                for (int i = 1; i < 4; i++)
+                for (int i = 1; i < m_difficultyLevel; i++)
                 {
                     m_variablesToGuess[i] = alphabet[Random.Range(0, alphabet.Length)];
                 }
@@ -77,7 +100,7 @@ public class EnemyController : MonoBehaviour
             case 5:
                 m_variablesToGuess = new char[m_difficultyLevel];
                 m_variablesToGuess[0] = dictionary[counter];
-                for (int i = 1; i < 5; i++)
+                for (int i = 1; i < m_difficultyLevel; i++)
                 {
                     m_variablesToGuess[i] = alphabet[Random.Range(0, alphabet.Length)];
                 }
@@ -85,7 +108,7 @@ public class EnemyController : MonoBehaviour
             case 6:
                 m_variablesToGuess = new char[m_difficultyLevel];
                 m_variablesToGuess[0] = dictionary[counter];
-                for (int i = 1; i < 6; i++)
+                for (int i = 1; i < m_difficultyLevel; i++)
                 {
                     m_variablesToGuess[i] = alphabet[Random.Range(0, alphabet.Length)];
                 }
@@ -93,7 +116,7 @@ public class EnemyController : MonoBehaviour
             case 7:
                 m_variablesToGuess = new char[m_difficultyLevel];
                 m_variablesToGuess[0] = dictionary[counter];
-                for (int i = 1; i < 7; i++)
+                for (int i = 1; i < m_difficultyLevel; i++)
                 {
                     m_variablesToGuess[i] = alphabet[Random.Range(0, alphabet.Length)];
                 }
@@ -101,7 +124,7 @@ public class EnemyController : MonoBehaviour
             case 8:
                 m_variablesToGuess = new char[m_difficultyLevel];
                 m_variablesToGuess[0] = dictionary[counter];
-                for (int i = 1; i < 8; i++)
+                for (int i = 1; i < m_difficultyLevel; i++)
                 {
                     m_variablesToGuess[i] = alphabet[Random.Range(0, alphabet.Length)];
                 }
@@ -109,7 +132,7 @@ public class EnemyController : MonoBehaviour
             case 9:
                 m_variablesToGuess = new char[m_difficultyLevel];
                 m_variablesToGuess[0] = dictionary[counter];
-                for (int i = 1; i < 9; i++)
+                for (int i = 1; i < m_difficultyLevel; i++)
                 {
                     m_variablesToGuess[i] = alphabet[Random.Range(0, alphabet.Length)];
                 }
@@ -117,7 +140,7 @@ public class EnemyController : MonoBehaviour
             case 10:
                 m_variablesToGuess = new char[m_difficultyLevel];
                 m_variablesToGuess[0] = dictionary[counter];
-                for (int i = 1; i < 10; i++)
+                for (int i = 1; i < m_difficultyLevel; i++)
                 {
                     m_variablesToGuess[i] = alphabet[Random.Range(0, alphabet.Length)];
                 }
@@ -125,29 +148,87 @@ public class EnemyController : MonoBehaviour
         }
     }
 
-    [ContextMenu("EnemyValidationCheck")]
-    public void EnemyValidationCheck()
-    {
-        m_myGuess = m_variablesToGuess[Random.Range(0, m_difficultyLevel)];
 
-        switch (m_myGuess.Equals(dictionary[counter]))
+    // Used on level reset
+    [ContextMenu("Randomise Letters to Guess")]
+    public void Randomise()
+    {
+        EnemyRangeRandomiser(m_difficultyLevel);
+    }
+
+    [ContextMenu("Guess a Letter")]
+    public void GuessLetter()
+    {
+        
+        // Guesses a letter within the range and adds it to the array
+        m_myGuess[counter] = m_variablesToGuess[Random.Range(0, m_difficultyLevel)];
+        EnemyRangeRandomiser(m_difficultyLevel);
+        counter++;
+
+        ExtendArm_.IncreaseSize();
+
+        switch (counter != dictionary.Length)
         {
             case true:
-                Debug.Log("True");
-                Debug.Log("" + m_myGuess);
-                //inputFields[counter].text = "" + letter;
-                EnemyRangeRandomiser(m_difficultyLevel);
-                counter++;
                 m_variablesToGuess[0] = dictionary[counter];
-                // Code to Go to Next Line 
-                Debug.Log("Next Line");
-
-
+                StartCoroutine(GuessAfterDelay(m_guessDelay));
                 break;
             case false:
-                Debug.Log("False");
-                Debug.Log("Currently on " + counter);
+                // Validate word created
+                EnemyValidationCheck();
                 break;
         }
+    }
+
+
+    [ContextMenu("Validation Check")]
+    public void EnemyValidationCheck()
+    {
+
+        // Collate both dictionaries and check if words are the same
+        m_dictionaryWord = new string(dictionary);
+        m_guessedWord = new string(m_myGuess);
+
+        switch (m_guessedWord.Equals(m_dictionaryWord))
+        {
+            case true:
+                Invoke("CorrectGuess", 1f);
+                Debug.Log("Correct!");
+                // Game Over Fn
+                break;
+            case false:
+                Debug.Log("Wrong!");
+                StartCoroutine(PauseBeforeRestart(m_restartDelay));
+                break;
+        }
+    }
+
+    public void CorrectGuess()
+    {
+        GrabSequence_GrabObject.GrabObject();
+    }
+
+    [ContextMenu("Restart Guess")]
+    public void Restart()
+    {
+        m_myGuess = new char[dictionary.Length];
+        counter = 0;
+        m_variablesToGuess[0] = dictionary[counter];
+        GuessLetter();
+    }
+
+    IEnumerator GuessAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        GuessLetter();
+    }
+
+    IEnumerator PauseBeforeRestart(float delay)
+    {
+        //Slap Back
+        FailHandSequence_.StartFailSequence();
+
+        yield return new WaitForSeconds(delay);
+        Restart();
     }
 }
