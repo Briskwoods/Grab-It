@@ -43,6 +43,11 @@ public class EnemyController : MonoBehaviour
         m_myGuess = new char[dictionary.Length];
     }
 
+    public void DelayBefore()
+    {
+        Invoke("RefreshEverything", 2f);
+    }
+
     // Used on level reset
     [ContextMenu("Refresh Everything")]
     public void RefreshEverything()                 // Function to update the enemy dictionary
@@ -159,7 +164,6 @@ public class EnemyController : MonoBehaviour
     [ContextMenu("Guess a Letter")]
     public void GuessLetter()
     {
-        
         // Guesses a letter within the range and adds it to the array
         m_myGuess[counter] = m_variablesToGuess[Random.Range(0, m_difficultyLevel)];
         EnemyRangeRandomiser(m_difficultyLevel);
@@ -230,5 +234,10 @@ public class EnemyController : MonoBehaviour
 
         yield return new WaitForSeconds(delay);
         Restart();
+    }
+
+    public void StopAllJobs()
+    {
+        StopAllCoroutines();
     }
 }
