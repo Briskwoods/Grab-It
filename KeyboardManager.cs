@@ -42,8 +42,6 @@ public class KeyboardManager : MonoBehaviour
 
     public void KeyPressed(string _key)
     {
-        //Debug.Log(_key);
-
         ValidationCheck(_key);
     }
     
@@ -54,6 +52,7 @@ public class KeyboardManager : MonoBehaviour
         {
             counter--;
             inputFields[counter].text = "";
+
             //Grow Arm
             ExtendArm_.ReduceSize();
         }
@@ -98,6 +97,7 @@ public class KeyboardManager : MonoBehaviour
     public void Restart()
     {
         counter = 0;
+        RefreshEverything();
         m_tempHold = new char[dictionary.Length];
         ClearFields(inputFields);
     }
@@ -125,7 +125,6 @@ public class KeyboardManager : MonoBehaviour
 
 
     // Used on level reset
-    [ContextMenu("Refresh Everything")]
     public void RefreshEverything()                 
     {
         counter = 0;
