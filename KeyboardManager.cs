@@ -130,6 +130,7 @@ public class KeyboardManager : MonoBehaviour
         counter = 0;
         dictionary = null;
         dictionary = ControlCenter.Instance.GameManager_.m_wordToType.ToLower().ToCharArray();
+        Debug.Log(ControlCenter.Instance.GameManager_.m_wordToType);
         m_tempHold = new char[dictionary.Length];
         UpdateSlotsAdjust.AdjustWordLength(dictionary.Length);
         ClearFields(inputFields);
