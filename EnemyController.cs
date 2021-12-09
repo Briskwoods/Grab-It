@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class EnemyController : MonoBehaviour
 {
@@ -32,6 +33,10 @@ public class EnemyController : MonoBehaviour
 
     public GrabSequence GrabSequence_GrabObject;
 
+    public TextMeshProUGUI EnemyTyping;
+
+    public Animator Typing;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -52,6 +57,7 @@ public class EnemyController : MonoBehaviour
     [ContextMenu("Refresh Everything")]
     public void RefreshEverything()                 // Function to update the enemy dictionary
     {
+        EnemyTyping.text = "";
         // Reset counter to 0;
         counter = 0;
         // Clear Dictionary
@@ -166,14 +172,19 @@ public class EnemyController : MonoBehaviour
     {
         // Guesses a letter within the range and adds it to the array
         m_myGuess[counter] = m_variablesToGuess[Random.Range(0, m_difficultyLevel)];
+
+        EnemyTyping.SetText(EnemyTyping.text + "" + m_myGuess[counter].ToString().ToUpper());
+        Typing.Play("Bounce", -1, 0);
+
         EnemyRangeRandomiser(m_difficultyLevel);
         counter++;
+       
 
         ExtendArm_.IncreaseSize();
 
         switch (counter != dictionary.Length)
         {
-            case true:
+            case true:                
                 m_variablesToGuess[0] = dictionary[counter];
                 StartCoroutine(GuessAfterDelay(m_guessDelay));
                 break;
@@ -215,6 +226,7 @@ public class EnemyController : MonoBehaviour
     [ContextMenu("Restart Guess")]
     public void Restart()
     {
+        EnemyTyping.text = "";
         m_myGuess = new char[dictionary.Length];
         counter = 0;
         m_variablesToGuess[0] = dictionary[counter];
